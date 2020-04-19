@@ -23,6 +23,7 @@ public class GCPlayState : State<GameController>
     
     public override void EnterState(GameController controller)
     {
+        Cursor.visible = false;
     }
     
     public override void ExitState(GameController controller)

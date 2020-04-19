@@ -23,6 +23,7 @@ public class GCPauseState : State<GameController>
 
     public override void EnterState(GameController controller)
     {
+        Cursor.visible = true;
         Time.timeScale = 0;
         controller.pauseMenu.SetActive(true);
     }
