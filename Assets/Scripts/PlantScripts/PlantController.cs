@@ -75,7 +75,7 @@ public class PlantController : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Plant is dead");
+        gc.stateMachine.ChangeState(GCGameOverState.Instance);
     }
 
     private void CheckLife()

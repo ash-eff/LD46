@@ -36,6 +36,7 @@ public class BaddieController : MonoBehaviour
     private BaddieAttackState attackState = new BaddieAttackState();
     private BaddiePushbackState pushbackState = new BaddiePushbackState();
     private Camera cam;
+    private GameController gc;
 
     public float Speed { get { return speed; } }
     public float RateOfAttack { get { return rateOfAttack; } }
@@ -45,6 +46,7 @@ public class BaddieController : MonoBehaviour
 
     private void Awake()
     {
+        gc = FindObjectOfType<GameController>();
         baddie = this;
         stateMachine = new StateMachine<BaddieController>(baddie); 
         stateMachine.ChangeState(walkState);
@@ -129,8 +131,15 @@ public class BaddieController : MonoBehaviour
     {
         if(health < 0)
         {
-            Destroy(gameObject);
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        gc.NumberOfEnemiesAlive--;
+        gc.UpdateKillCount();
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

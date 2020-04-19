@@ -21,6 +21,7 @@ public class WCSpawnState : State<WaveController>
 
     public override void EnterState(WaveController controller)
     {
+        controller.StartSpawning();
     }
 
     public override void ExitState(WaveController controller)

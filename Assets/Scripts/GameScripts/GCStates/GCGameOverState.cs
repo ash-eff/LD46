@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GCWaitState : State<GameController>
+public class GCGameOverState : State<GameController>
 {
     #region setup
-    private static GCWaitState _instance;
+    private static GCGameOverState _instance;
 
-    private GCWaitState()
+    private GCGameOverState()
     {
         if (_instance != null) return;
         _instance = this;
@@ -15,18 +15,23 @@ public class GCWaitState : State<GameController>
 
     public override State<GameController> createInstance() { return Instance; }
 
-    public static GCWaitState Instance
+    public static GCGameOverState Instance
     {
-        get { if (_instance == null) new GCWaitState(); return _instance; }
+        get { if (_instance == null) new GCGameOverState(); return _instance; }
     }
     #endregion
 
     public override void EnterState(GameController controller)
     {
+        Cursor.visible = true;
+        Time.timeScale = 0;
+        controller.gameOverMenu.SetActive(true);
     }
 
     public override void ExitState(GameController controller)
     {
+        controller.gameOverMenu.SetActive(false);
+        Time.timeScale = 1;
     }
 
     public override void UpdateState(GameController controller)
