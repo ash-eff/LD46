@@ -34,11 +34,13 @@ public class PlayerController : MonoBehaviour
     private Weapon weapon;
     private GameController gc;
     private Camera cam;
+    private Animator anim;
 
     public float WeaponDamage { get { return weaponDamage; } }
 
     private void Awake()
     {
+        anim = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         playerSprite = GetComponentInChildren<SpriteRenderer>();
         player = this;
@@ -63,6 +65,7 @@ public class PlayerController : MonoBehaviour
         movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         CursorPosition();
         RotateWeapons();
+        CheckAnimation();
         if (touchingHydrant && currentHydrant != null && currentHydrant.waterAmount > 0)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -117,6 +120,19 @@ public class PlayerController : MonoBehaviour
         clampedPos.x = Mathf.Clamp(transform.position.x, -gc.HalfMapWidth(), gc.HalfMapWidth());
         clampedPos.y = Mathf.Clamp(transform.position.y, -gc.HalfMapHeight(), gc.HalfMapHeight());
         transform.position = clampedPos;
+    }
+
+    public void CheckAnimation()
+    {
+        Debug.Log(movement);
+        if(movement.x > 0 || movement.x < 0 || movement.y > 0 || movement.y < 0)
+        {
+            anim.SetBool("IsRunning", true);
+        }
+        else
+        {
+            anim.SetBool("IsRunning", false);
+        }
     }
 
     private void SprayHose()

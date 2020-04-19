@@ -5,8 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class TitleScreen : MonoBehaviour
 {
+    TransistionLoader loader;
+
+    private void Awake()
+    {
+        loader = FindObjectOfType<TransistionLoader>();
+    }
+
     public void StartGame()
     {
-        SceneManager.LoadScene(1);
+        loader.LoadNextScene(1);
     }
 }

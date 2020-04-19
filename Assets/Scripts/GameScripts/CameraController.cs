@@ -6,7 +6,10 @@ public class CameraController : MonoBehaviour
 {
     public float lerpSpeed;
     public float shakeDuration = .25f;
-    public float shakeMagnitude = .1f;
+    public float shakeMagnitude;
+    public bool followPlayer;
+    public Color colorA;
+    public Color colorB;
     private GameController gameController;
     private PlayerController player;
     private Camera mainCam;
@@ -16,11 +19,22 @@ public class CameraController : MonoBehaviour
         mainCam = Camera.main;
         player = FindObjectOfType<PlayerController>();
         gameController = FindObjectOfType<GameController>();
+        if (player == null)
+            followPlayer = false;
+        else
+            followPlayer = true;
+    }
+
+    private void Update()
+    {
+        if(!followPlayer)
+            mainCam.backgroundColor = Color.Lerp(colorA, colorB, Mathf.PingPong(Time.time * 1f, 1.0f));
     }
 
     private void FixedUpdate()
     {
-        FollowPlayerTarget(player.transform.position);
+        if(followPlayer)
+            FollowPlayerTarget(player.transform.position);
     }
 
     void FollowPlayerTarget(Vector2 _target)

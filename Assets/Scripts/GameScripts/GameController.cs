@@ -164,6 +164,8 @@ public class GameController : MonoBehaviour
 
     IEnumerator NewDaySetUp()
     {
+        if (waveController.waveNumber == 0)
+            yield return new WaitForSeconds(1.5f);
         stateMachine.ChangeState(GCWaitState.Instance);
         fanfare.SetActive(false);
         waveText.text = "Wave " + (waveController.waveNumber + 1).ToString();
@@ -196,6 +198,7 @@ public class GameController : MonoBehaviour
         numberOfEnemiesAlive = 0;
         totalNumberOfBaddiesKilled = 0;
         waveNumberOfBaddiesKilled = 0;
-        SceneManager.LoadScene(1);
+        TransistionLoader loader = FindObjectOfType<TransistionLoader>();
+        loader.LoadNextScene(1);
     }
 }
