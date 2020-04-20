@@ -15,21 +15,35 @@ public class PlayerController : MonoBehaviour
     public float rateOfSwing;
     private float lastSpray;
     private float lastSwing;
-    public float waterCollected;
+    public float waterAmount;
+    public float waterMaxAmount;
     public float waterRegenAmount;
     public Image waterAmountFillBar;
     public GameObject weaponHolder;
     public GameObject backScissors;
     public SpriteRenderer cutters;
     public SpriteRenderer hose;
+    public Hose hoseSprayer;
+    public ParticleSystem confettiOne;
+    public ParticleSystem confettiTwo;
+
+    public int moneyCollected;
+
+    public int weaponUpgradeLevel;
+    public int tankUpgradeLevel;
+    public bool freezingWater;
+
+    public int weaponUpgradeCost;
+    public int waterUpgradeCost;
+    public int tankUpgradeCost;
 
     public bool touchingHydrant;
     public HydrantController currentHydrant;
 
     [SerializeField]
     private SpriteRenderer playerSprite;
-    [SerializeField]
-    private SpriteRenderer cursorSprite;
+    
+    public SpriteRenderer cursorSprite;
 
     private Vector2 movement;
     private Rigidbody2D rb2d;
@@ -40,6 +54,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        hoseSprayer = hose.GetComponent<Hose>();
         backScissors.SetActive(true);
         hose.gameObject.SetActive(true);
         cutters.gameObject.SetActive(false);
@@ -49,7 +64,6 @@ public class PlayerController : MonoBehaviour
         player = this;
         stateMachine = new StateMachine<PlayerController>(player);
         stateMachine.ChangeState(PlayerWaitState.Instance);
-        hose.gameObject.SetActive(true);
         weapon = cutters.GetComponent<Weapon>();
         gc = FindObjectOfType<GameController>();
         cam = Camera.main;
@@ -66,14 +80,14 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if(waterCollected + 5 >= 100)
+                if(waterAmount + 5 >= 100)
                 {
-                    waterCollected = 100;
+                    waterAmount = 100;
                 }
                 else
                 {
                     currentHydrant.waterAmount -= 5f;
-                    waterCollected += 5f;
+                    waterAmount += 5f;
                 }
             }
         }
@@ -84,6 +98,11 @@ public class PlayerController : MonoBehaviour
             backScissors.SetActive(true);
             hose.gameObject.SetActive(true);
             cutters.gameObject.SetActive(false);
+        }
+        else
+        {
+            hoseSprayer.SetWaterSplashActive(false);
+            hoseSprayer.ResetHosePos();
         }
 
         if (Input.GetMouseButton(0))
@@ -101,7 +120,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // MOVE THIS
-        waterAmountFillBar.fillAmount = waterCollected / 100f;
+        waterAmountFillBar.fillAmount = waterAmount / 100f;
     }
 
     public void SetPlayerVelocity(float _atSpeed, bool allowMovement)
@@ -144,19 +163,34 @@ public class PlayerController : MonoBehaviour
 
     private void SprayHose()
     {
-        if(waterCollected > 0)
+        if (waterAmount > 0)
         {
+            hoseSprayer.SetWaterSplashActive(true);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, MyUtils.Direction2D(transform.position, cursorSprite.transform.position), MyUtils.DistanceBetweenObjects(transform.position, cursorSprite.transform.position), waterHitLayers);
+            Debug.DrawLine(transform.position, cursorSprite.transform.position, Color.blue, rateOfSpray);
+            if (hit)
+            {
+                hoseSprayer.SetHoseEndPos(hit.point);
+            }
+            else
+            {
+                hoseSprayer.SetHoseEndPos(cursorSprite.transform.position);
+            }
+
             if (Time.time > rateOfSpray + lastSpray)
             {
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, MyUtils.Direction2D(transform.position, cursorSprite.transform.position), MyUtils.DistanceBetweenObjects(transform.position, cursorSprite.transform.position), waterHitLayers);
-                Debug.DrawLine(transform.position, cursorSprite.transform.position, Color.blue, rateOfSpray);
-                waterCollected -= waterRegenAmount;
+                waterAmount -= waterRegenAmount;
                 lastSpray = Time.time;
                 if (hit)
                 {
                     HitTargetWithWater(hit.collider);
                 }
             }
+        }
+        else
+        {
+            hoseSprayer.ResetHosePos();
+            hoseSprayer.SetWaterSplashActive(false);
         }
     }
 
@@ -190,6 +224,11 @@ public class PlayerController : MonoBehaviour
         {
             BaddieController baddie = target.GetComponent<BaddieController>();
             baddie.GetPushedBack();
+            if (freezingWater)
+            {
+                // slow baddie
+                Debug.Log("Slow Baddie");
+            }
         }
     }
 
@@ -213,5 +252,67 @@ public class PlayerController : MonoBehaviour
         {
             cursorSprite.transform.position = mousePos;
         }
+    }
+
+    public void ShootConfetti()
+    {
+        confettiOne.Play();
+        confettiTwo.Play();
+    }
+
+    public bool UpgradeWeapon()
+    {
+        if (weaponUpgradeLevel >= 3)
+            return false;
+        else
+        {
+            weaponUpgradeLevel++;
+            moneyCollected -= weaponUpgradeCost;
+            weaponUpgradeCost += (weaponUpgradeCost * weaponUpgradeLevel);
+            if (weaponUpgradeLevel == 1 || weaponUpgradeLevel == 2)
+            {
+                weaponDamage += 25f;
+            }
+            else
+            {
+                weaponDamage += 50f;
+            }
+
+            return true;
+        }
+    }
+
+    public bool UpgradeWaterTank()
+    {
+        if (tankUpgradeLevel >= 3)
+            return false;
+        else
+        {
+            tankUpgradeLevel++;
+            moneyCollected -= tankUpgradeCost;
+            tankUpgradeCost += (tankUpgradeCost * tankUpgradeLevel);
+            if (tankUpgradeLevel == 1 || tankUpgradeLevel == 2)
+            {
+                waterMaxAmount += 25f;
+            }
+            else
+            {
+                waterMaxAmount += 50f;
+            }
+            waterAmount = waterMaxAmount;
+            return true;
+        }
+    }
+
+    public void UpgradeWaterToFreeze()
+    {
+        moneyCollected -= waterUpgradeCost;
+        freezingWater = true;
+    }
+
+    public void CollectMoney(int val)
+    {
+        // play sound
+        moneyCollected += val;
     }
 }

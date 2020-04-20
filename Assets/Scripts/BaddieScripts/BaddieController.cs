@@ -8,6 +8,8 @@ public class BaddieController : MonoBehaviour
     public StateMachine<BaddieController> stateMachine;
     public static BaddieController baddie;
 
+    private float coinDropChance = .35f;
+
     private float speed;
     [SerializeField]
     private float rateOfAttack;
@@ -29,6 +31,7 @@ public class BaddieController : MonoBehaviour
     public TextMeshProUGUI baddDistText;
     public PlantController plant;
     private PlayerController player;
+    private ObjectPooler pool;
     private Vector2 target;
     private Vector2 position;
     private Vector2 screenPos;
@@ -58,6 +61,7 @@ public class BaddieController : MonoBehaviour
         position = transform.position;
         speed = forwardSpeed;
         cam = Camera.main;
+        pool = FindObjectOfType<ObjectPooler>();
     }
 
     private void Update() => stateMachine.Update();
@@ -106,6 +110,8 @@ public class BaddieController : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
+        GameObject obj = pool.SpawnFromPool("FloatingText", transform.position, Quaternion.identity);
+        obj.GetComponent<FloatingText>().SetDisplay("- " + amount.ToString());
         health -= amount;
         CheckLife();
         if (!isFlashing)
@@ -151,6 +157,9 @@ public class BaddieController : MonoBehaviour
 
     private void Die()
     {
+        float changeToDropCoin = Random.value;
+        if (changeToDropCoin <= coinDropChance)
+            pool.SpawnFromPool("Coin", transform.position, Quaternion.identity);
         gc.NumberOfEnemiesAlive--;
         gc.UpdateKillCount();
         Destroy(gameObject);

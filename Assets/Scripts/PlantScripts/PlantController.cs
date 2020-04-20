@@ -8,11 +8,15 @@ public class PlantController : MonoBehaviour
 {
     public float life;
     public float maxLife;
-    private int decayAmount = 1;
+    public int decayAmount = 2;
     public bool isRegening = false;
     public Image lifeAmountFillBar;
     public GameObject indicator;
     public TextMeshProUGUI plantDistText;
+    PlayerController player;
+
+    public int upgradeLevel = 0;
+    public int upgradeCost;
 
     private float timer = 0;
 
@@ -21,6 +25,7 @@ public class PlantController : MonoBehaviour
 
     private void Awake()
     {
+        player = FindObjectOfType<PlayerController>();
         gc = FindObjectOfType<GameController>();
         cam = Camera.main;
     }
@@ -107,5 +112,27 @@ public class PlantController : MonoBehaviour
         float clampDirX = Mathf.Clamp(directionToMe.x, -24.75f, 24.75f);
         float clampDirY = Mathf.Clamp(directionToMe.y, -14f, 14f);
         indicator.transform.position = new Vector2(cam.transform.position.x, cam.transform.position.y) + new Vector2(clampDirX, clampDirY);
+    }
+
+    public bool UpgradePlantLife()
+    {
+        if (upgradeLevel >= 3)
+            return false;
+        else
+        {
+            upgradeLevel++;
+            player.moneyCollected -= upgradeCost;
+            upgradeCost += (upgradeCost * upgradeLevel);
+            if (upgradeLevel == 1 || upgradeLevel == 2)
+            {
+                maxLife += 25f;
+            }
+            else
+            {
+                maxLife += 50f;
+            }
+            life = maxLife;
+            return true;
+        }
     }
 }

@@ -16,7 +16,6 @@ public class GameController : MonoBehaviour
     public static GameController controller;
 
     public GameObject fanfare;
-    public TextMeshProUGUI waveCompleteText;
     public TextMeshProUGUI killedText;
     public TextMeshProUGUI totalKilledText;
     public TextMeshProUGUI plantLevelText;
@@ -120,43 +119,18 @@ public class GameController : MonoBehaviour
         }
 
         stateMachine.ChangeState(GCFanFareState.Instance);
-        StartCoroutine(IGetDayTotals());
+        IGetDayTotals();
         Debug.Log("Day complete in: " + currentLerpTime + " seconds");
     }
 
-    IEnumerator IGetDayTotals()
+    void IGetDayTotals()
     {
         fanfare.SetActive(true);
-        nextDayButton.gameObject.SetActive(false);
-        killedText.gameObject.SetActive(false);
-        totalKilledText.gameObject.SetActive(false);
-        plantLevelText.gameObject.SetActive(false);
-        waterLevelText.gameObject.SetActive(false);
-        waveTimeText.gameObject.SetActive(false);
-        waveCompleteText.text = "WAVE " + waveController.waveNumber.ToString() + " COMPLETE.";
         killedText.text = "NUMBER OF ENEMIES KILLED:  " + waveNumberOfBaddiesKilled.ToString();
         totalKilledText.text = "TOTAL NUMBER OF ENEMIES KILLED:  " + totalNumberOfBaddiesKilled.ToString();
         plantLevelText.text = "PLANT HEALTH:  " + Mathf.RoundToInt(plant.life).ToString();
-        waterLevelText.text = "WATER LEVEL:  " + Mathf.RoundToInt(player.waterCollected).ToString();
-        waveTimeText.text = "TIME TO COMPLETE WAVE:  " + waveTimeToComplete.ToString() + "  SECONDS";
-
-        yield return new WaitForSeconds(.3f);
-        audioSource.PlayOneShot(statPunch);
-        killedText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(.3f);
-        audioSource.PlayOneShot(statPunch);
-        totalKilledText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(.3f);
-        audioSource.PlayOneShot(statPunch);
-        plantLevelText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(.3f);
-        audioSource.PlayOneShot(statPunch);
-        waterLevelText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(.3f);
-        audioSource.PlayOneShot(statPunch);
-        waveTimeText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(.3f);
-        nextDayButton.gameObject.SetActive(true);
+        waterLevelText.text = "WATER LEVEL:  " + Mathf.RoundToInt(player.waterAmount).ToString();
+        waveTimeText.text = "TIME:  " + waveTimeToComplete.ToString() + "  SECONDS";
     }
 
     public void StartNewDay()
