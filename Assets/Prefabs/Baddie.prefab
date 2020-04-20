@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 2970089987706584958}
   - component: {fileID: 2970089987706584959}
   - component: {fileID: 2970089987706584897}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Baddie
   m_TagString: Baddie
   m_Icon: {fileID: 0}
@@ -260,9 +260,7 @@ MonoBehaviour:
   baddieSprite: {fileID: 2970089988530529803}
   baddDistText: {fileID: 2680896886378155443}
   plant: {fileID: 0}
-  shaderGUItext: {fileID: 10101, guid: 0000000000000000e000000000000000, type: 0}
-  shaderSpritesDefault: {fileID: 4800000, guid: e260cfa7296ee7642b167f1eb5be5023,
-    type: 3}
+  anim: {fileID: 4591053510479216039}
 --- !u!1 &2970089988530529805
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,6 +272,7 @@ GameObject:
   - component: {fileID: 2970089988530529804}
   - component: {fileID: 2970089988530529803}
   - component: {fileID: 6431422407195928622}
+  - component: {fileID: 4591053510479216039}
   m_Layer: 0
   m_Name: Baddie Sprite
   m_TagString: Untagged
@@ -334,12 +333,13 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1380aa2318dab83428ab2726aa85f3d1, type: 3}
+  m_Sprite: {fileID: -701968804562823866, guid: 58cdaa66f27729e48a933c36b8eddf3f,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 4, y: 4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -370,7 +370,26 @@ MonoBehaviour:
   - {x: -0.5, y: 1, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 145434
+  m_InstanceId: 122012
+--- !u!95 &4591053510479216039
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2970089988530529805}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 923797cd49d3a1648ac28ee8361b29c6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5444436832106766500
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,7 +399,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5458073251045476972}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Baddie Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

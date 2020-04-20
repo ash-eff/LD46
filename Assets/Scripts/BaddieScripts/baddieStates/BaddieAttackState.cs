@@ -6,6 +6,8 @@ public class BaddieAttackState : State<BaddieController>
 {
     public override void EnterState(BaddieController baddie)
     {
+        Debug.Log("Attack State");
+        baddie.anim.SetBool("Running", false);
     }
 
     public override void ExitState(BaddieController baddie)

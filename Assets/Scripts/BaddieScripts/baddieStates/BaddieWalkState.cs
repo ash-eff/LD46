@@ -6,6 +6,8 @@ public class BaddieWalkState : State<BaddieController>
 {
     public override void EnterState(BaddieController baddie)
     {
+        Debug.Log("Walk State");
+        baddie.anim.SetBool("Running", true);
     }
 
     public override void ExitState(BaddieController baddie)
@@ -15,6 +17,7 @@ public class BaddieWalkState : State<BaddieController>
     public override void UpdateState(BaddieController baddie)
     {
         baddie.CheckScreenPos();
+        baddie.GetBaddieDirection();
         Walk(baddie);
     }
 

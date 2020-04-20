@@ -37,6 +37,7 @@ public class BaddieController : MonoBehaviour
     private BaddiePushbackState pushbackState = new BaddiePushbackState();
     private Camera cam;
     private GameController gc;
+    public Animator anim;
 
     public float Speed { get { return speed; } }
     public float RateOfAttack { get { return rateOfAttack; } }
@@ -46,6 +47,7 @@ public class BaddieController : MonoBehaviour
 
     private void Awake()
     {
+        anim.SetBool("Running", true);
         gc = FindObjectOfType<GameController>();
         baddie = this;
         stateMachine = new StateMachine<BaddieController>(baddie); 
@@ -60,6 +62,18 @@ public class BaddieController : MonoBehaviour
 
     private void Update() => stateMachine.Update();
     private void FixedUpdate() => stateMachine.FixedUpdate();
+
+    public void GetBaddieDirection()
+    {
+        if(MyUtils.Direction2D(transform.position, plant.transform.position).x < 0)
+        {
+            baddieSprite.transform.localScale = new Vector2(-1, 1);
+        }
+        else
+        {
+            baddieSprite.transform.localScale = new Vector2(1, 1);
+        }
+    }
 
     public void CheckScreenPos()
     {
@@ -154,7 +168,7 @@ public class BaddieController : MonoBehaviour
     {
         if (collision.tag == "Plant")
         {
-            stateMachine.ChangeState(pushbackState);
+            stateMachine.ChangeState(walkState);
         }
     }
 }

@@ -26,6 +26,7 @@ public class GCGameOverState : State<GameController>
         Cursor.visible = true;
         Time.timeScale = 0;
         controller.gameOverMenu.SetActive(true);
+        controller.player.stateMachine.ChangeState(PlayerWaitState.Instance);
     }
 
     public override void ExitState(GameController controller)

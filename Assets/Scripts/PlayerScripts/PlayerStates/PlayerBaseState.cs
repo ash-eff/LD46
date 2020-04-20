@@ -21,6 +21,7 @@ public class PlayerBaseState : State<PlayerController>
 
     public override void EnterState(PlayerController player)
     {
+        player.SetCursorActive(true);
     }
 
     public override void ExitState(PlayerController player)
@@ -30,6 +31,9 @@ public class PlayerBaseState : State<PlayerController>
     public override void UpdateState(PlayerController player)
     {
         player.PlayerInput();
+        player.CursorPosition();
+        player.RotateWeapons();
+        player.CheckAnimation();
         player.SetPlayerVelocity(10f, true);
         player.SetSpriteDirection();
         player.ClampPlayerToMap();

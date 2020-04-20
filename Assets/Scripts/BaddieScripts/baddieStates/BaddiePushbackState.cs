@@ -6,6 +6,7 @@ public class BaddiePushbackState : State<BaddieController>
 {
     public override void EnterState(BaddieController baddie)
     {
+        Debug.Log("Push State");
     }
 
     public override void ExitState(BaddieController baddie)

@@ -8,16 +8,18 @@ public class PlayerController : MonoBehaviour
     public StateMachine<PlayerController> stateMachine;
     public static PlayerController player;
 
-    [SerializeField]
-    private float weaponDamage;
+    public float weaponDamage;
     public float cursorMaxRadius;
     public LayerMask waterHitLayers;
     public float rateOfSpray;
+    public float rateOfSwing;
     private float lastSpray;
+    private float lastSwing;
     public float waterCollected;
     public float waterRegenAmount;
     public Image waterAmountFillBar;
     public GameObject weaponHolder;
+    public GameObject backScissors;
     public SpriteRenderer cutters;
     public SpriteRenderer hose;
 
@@ -36,16 +38,17 @@ public class PlayerController : MonoBehaviour
     private Camera cam;
     private Animator anim;
 
-    public float WeaponDamage { get { return weaponDamage; } }
-
     private void Awake()
     {
+        backScissors.SetActive(true);
+        hose.gameObject.SetActive(true);
+        cutters.gameObject.SetActive(false);
         anim = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
         playerSprite = GetComponentInChildren<SpriteRenderer>();
         player = this;
         stateMachine = new StateMachine<PlayerController>(player);
-        stateMachine.ChangeState(PlayerBaseState.Instance);
+        stateMachine.ChangeState(PlayerWaitState.Instance);
         hose.gameObject.SetActive(true);
         weapon = cutters.GetComponent<Weapon>();
         gc = FindObjectOfType<GameController>();
@@ -57,15 +60,8 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerInput()
     {
-        if(gc.stateMachine.currentState != GCPlayState.Instance)
-        {
-            return;
-        }
-
         movement = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        CursorPosition();
-        RotateWeapons();
-        CheckAnimation();
+
         if (touchingHydrant && currentHydrant != null && currentHydrant.waterAmount > 0)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -82,19 +78,26 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(waterCollected > 0)
+        if (Input.GetMouseButton(1))
         {
-            if (Input.GetMouseButton(1))
-            {
-                hose.gameObject.SetActive(true);
-                SprayHose();
-            }
+            SprayHose();
+            backScissors.SetActive(true);
+            hose.gameObject.SetActive(true);
+            cutters.gameObject.SetActive(false);
         }
 
         if (Input.GetMouseButton(0))
         {
-            hose.gameObject.SetActive(false);
             SwingWeapon();
+            backScissors.SetActive(false);
+            hose.gameObject.SetActive(false);
+            cutters.gameObject.SetActive(true);
+        }
+        else
+        {
+            backScissors.SetActive(true);
+            hose.gameObject.SetActive(true);
+            cutters.gameObject.SetActive(false);
         }
 
         // MOVE THIS
@@ -124,38 +127,48 @@ public class PlayerController : MonoBehaviour
 
     public void CheckAnimation()
     {
-        Debug.Log(movement);
         if(movement.x > 0 || movement.x < 0 || movement.y > 0 || movement.y < 0)
         {
             anim.SetBool("IsRunning", true);
         }
         else
         {
-            anim.SetBool("IsRunning", false);
+            SetPlayerIdle();
         }
+    }
+
+    public void SetPlayerIdle()
+    {
+        anim.SetBool("IsRunning", false);
     }
 
     private void SprayHose()
     {
-        if(Time.time > rateOfSpray + lastSpray)
+        if(waterCollected > 0)
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, MyUtils.Direction2D(transform.position, cursorSprite.transform.position), MyUtils.DistanceBetweenObjects(transform.position, cursorSprite.transform.position), waterHitLayers);
-            Debug.DrawLine(transform.position, cursorSprite.transform.position, Color.blue, rateOfSpray);
-            waterCollected -= waterRegenAmount;
-            lastSpray = Time.time;
-            if (hit)
+            if (Time.time > rateOfSpray + lastSpray)
             {
-                HitTargetWithWater(hit.collider);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, MyUtils.Direction2D(transform.position, cursorSprite.transform.position), MyUtils.DistanceBetweenObjects(transform.position, cursorSprite.transform.position), waterHitLayers);
+                Debug.DrawLine(transform.position, cursorSprite.transform.position, Color.blue, rateOfSpray);
+                waterCollected -= waterRegenAmount;
+                lastSpray = Time.time;
+                if (hit)
+                {
+                    HitTargetWithWater(hit.collider);
+                }
             }
         }
     }
 
     private void SwingWeapon()
     {
-        weapon.Swing();
+        if (Time.time > rateOfSwing + lastSwing)
+        {
+            lastSwing = Time.time;
+        }
     }
 
-    private void RotateWeapons()
+    public void RotateWeapons()
     {
         Vector2 mousePos = Input.mousePosition;
         Vector2 weaponPos = cam.WorldToScreenPoint(weaponHolder.transform.position);
@@ -180,7 +193,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void CursorPosition()
+    public void SetCursorActive(bool b)
+    {
+        cursorSprite.gameObject.SetActive(b);
+    }
+
+    public void CursorPosition()
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 originPos = transform.position;

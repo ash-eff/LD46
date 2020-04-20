@@ -31,7 +31,7 @@ public class WaveController : MonoBehaviour
 
     IEnumerator IStartSpawning()
     {
-        Debug.Log("Start Spawning");
+        string[] enemies = { "Baddie", "Baddie2", "Baddie3", "Baddie4" };
         waveNumber++;
         int numberOfBaddies = 0;
         bool spawnMiniboss = false;
@@ -48,8 +48,7 @@ public class WaveController : MonoBehaviour
         while (numberOfBaddies > 0)
         {
             Vector2 legalPos = GetLegalSpawnPoint();
-            pool.SpawnFromPool("Baddie", legalPos, Quaternion.identity);
-            Debug.Log("Spawning Baddie at: " + legalPos);
+            pool.SpawnFromPool(enemies[Random.Range(0, enemies.Length)], legalPos, Quaternion.identity);
             numberOfBaddies--;
             yield return new WaitForSeconds(spawnTimer);
         }
@@ -57,7 +56,6 @@ public class WaveController : MonoBehaviour
         if(spawnMiniboss)
             pool.SpawnFromPool("Miniboss", GetLegalSpawnPoint(), Quaternion.identity);
         stateMachine.ChangeState(WCWaitState.Instance);
-        Debug.Log("Done Spawning");
     }
 
     Vector2 GetLegalSpawnPoint()

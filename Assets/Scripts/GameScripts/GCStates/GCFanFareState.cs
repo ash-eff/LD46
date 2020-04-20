@@ -24,6 +24,7 @@ public class GCFanFareState : State<GameController>
     public override void EnterState(GameController controller)
     {
         Cursor.visible = true;
+        controller.player.stateMachine.ChangeState(PlayerWaitState.Instance);
     }
 
     public override void ExitState(GameController controller)

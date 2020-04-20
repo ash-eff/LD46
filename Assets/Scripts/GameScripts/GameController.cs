@@ -42,7 +42,7 @@ public class GameController : MonoBehaviour
     private AudioClip statPunch, timePing1, timePing2;
     private AudioSource audioSource;
     private WaveController waveController;
-    private PlayerController player;
+    public PlayerController player;
     private PlantController plant;
 
     public GameObject pauseMenu;
@@ -104,9 +104,12 @@ public class GameController : MonoBehaviour
         {
             if(numberOfEnemiesAlive <= 0 && stateMachine.currentState != GCWaitState.Instance)
             {
-                waveTimeToComplete = currentLerpTime;
-                Time.timeScale = 60f;
                 stateMachine.ChangeState(GCWaitState.Instance);
+                waveTimeToComplete = currentLerpTime;
+                startPos = theSun.transform.rotation;
+                targetPos = Quaternion.Euler(0, 0, -180);
+                currentLerpTime = 0;
+                lerpTime = 1f;
             }
             currentLerpTime += Time.deltaTime;
             float perc = currentLerpTime / lerpTime;
@@ -116,7 +119,6 @@ public class GameController : MonoBehaviour
             yield return null;
         }
 
-        Time.timeScale = 1f;
         stateMachine.ChangeState(GCFanFareState.Instance);
         StartCoroutine(IGetDayTotals());
         Debug.Log("Day complete in: " + currentLerpTime + " seconds");
@@ -172,13 +174,13 @@ public class GameController : MonoBehaviour
         waveText.gameObject.SetActive(true);
         yield return new WaitForSeconds(1f);
         audioSource.PlayOneShot(timePing1);
-        waveText.text = "THREE";
+        waveText.text = "3";
         yield return new WaitForSeconds(1f);
         audioSource.PlayOneShot(timePing1);
-        waveText.text = "TWO";
+        waveText.text = "2";
         yield return new WaitForSeconds(1f);
         audioSource.PlayOneShot(timePing1);
-        waveText.text = "ONE";
+        waveText.text = "1";
         yield return new WaitForSeconds(1f);
         audioSource.PlayOneShot(timePing2);
         waveText.text = "GO";

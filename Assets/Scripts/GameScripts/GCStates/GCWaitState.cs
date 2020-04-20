@@ -23,6 +23,7 @@ public class GCWaitState : State<GameController>
 
     public override void EnterState(GameController controller)
     {
+        controller.player.stateMachine.ChangeState(PlayerWaitState.Instance);
     }
 
     public override void ExitState(GameController controller)

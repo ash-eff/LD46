@@ -24,6 +24,7 @@ public class GCPlayState : State<GameController>
     public override void EnterState(GameController controller)
     {
         Cursor.visible = false;
+        controller.player.stateMachine.ChangeState(PlayerBaseState.Instance);
     }
     
     public override void ExitState(GameController controller)
