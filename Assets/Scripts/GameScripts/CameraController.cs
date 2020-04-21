@@ -13,6 +13,7 @@ public class CameraController : MonoBehaviour
     private GameController gameController;
     private PlayerController player;
     private Camera mainCam;
+    public AudioSource audioSource;
 
     private void Awake()
     {
@@ -45,6 +46,7 @@ public class CameraController : MonoBehaviour
 
     public void CameraShake()
     {
+        audioSource.Play();
         StartCoroutine(Shake(shakeDuration, shakeMagnitude));
     }
 

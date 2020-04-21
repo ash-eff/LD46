@@ -41,6 +41,7 @@ public class BaddieController : MonoBehaviour
     private BaddieFrozenState frozenState = new BaddieFrozenState();
     private BaddieStopState gameOverState = new BaddieStopState();
     private Camera cam;
+    private CameraController cc;
     private GameController gc;
     public Animator anim;
     private AudioSource audioSource;
@@ -71,6 +72,8 @@ public class BaddieController : MonoBehaviour
         position = transform.position;
         speed = forwardSpeed;
         cam = Camera.main;
+
+        cc = cam.GetComponentInParent<CameraController>();
         pool = FindObjectOfType<ObjectPooler>();
         wc = FindObjectOfType<WaveController>();
     }
@@ -82,7 +85,18 @@ public class BaddieController : MonoBehaviour
 
     public void CheckHealth()
     {
-        health += Mathf.Ceil(wc.waveNumber / 5) * 5;
+        if(health < 250)
+        {
+            health += 10;
+        }
+    }
+
+    public void CheckMiniBossHealth()
+    {
+        if (health < 400)
+        {
+            health += 100;
+        }
     }
 
     public void GetBaddieDirection()
@@ -157,7 +171,7 @@ public class BaddieController : MonoBehaviour
         {
             stateMachine.ChangeState(pushbackState);
             target = player.transform.position;
-            speed = -forwardSpeed;
+            speed = -(forwardSpeed + 1);
             pushResetTimer -= Time.deltaTime;
             yield return null;
         }
@@ -203,6 +217,7 @@ public class BaddieController : MonoBehaviour
 
         gc.NumberOfEnemiesAlive--;
         gc.UpdateKillCount();
+        cc.CameraShake();
         gameObject.SetActive(false);
     }
 

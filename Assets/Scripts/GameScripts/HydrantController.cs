@@ -30,6 +30,9 @@ public class HydrantController : MonoBehaviour
         waterPressureFill.fillAmount = waterAmount / maxWaterAmount;
         if (waterAmount == maxWaterAmount)
             canRefill = false;
+
+        if (player.stateMachine.currentState == PlayerWaitState.Instance)
+            pumpText.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

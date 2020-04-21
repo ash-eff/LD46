@@ -39,6 +39,7 @@ public class GCGameOverState : State<GameController>
 
     public override void UpdateState(GameController controller)
     {
+        controller.UpdateGUI();
         Debug.Log(("game over"));
     }
 

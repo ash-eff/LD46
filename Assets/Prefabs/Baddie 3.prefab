@@ -487,7 +487,7 @@ MonoBehaviour:
   pushResetTimer: 0
   damageAmount: 2
   isFlashing: 0
-  health: 100
+  health: 90
   indicator: {fileID: 3938368801899446390}
   baddieSprite: {fileID: 6061426078633297625}
   baddDistText: {fileID: 6349255785527192929}

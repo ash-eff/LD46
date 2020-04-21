@@ -108,7 +108,7 @@ MonoBehaviour:
   - {x: -0.5, y: 1, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 94230
+  m_InstanceId: 29046
 --- !u!1 &1222239353570169526
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,7 +211,7 @@ MonoBehaviour:
   pushResetTimer: 0
   damageAmount: 5
   isFlashing: 0
-  health: 200
+  health: 100
   indicator: {fileID: 8236841134882196816}
   baddieSprite: {fileID: 1222239353325095935}
   baddDistText: {fileID: 2086803453605650503}
@@ -223,9 +223,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1efe13c3c651876428c82529786a48bb, type: 3}
   - {fileID: 8300000, guid: a647c4e007954f04e8dc12c38d5e84a9, type: 3}
   - {fileID: 8300000, guid: fadcb6cc70380bd48b1e29916e3e39bc, type: 3}
-  coinDrop: {fileID: 8300000, guid: f3f1f5372873bd540bb388c1e7ea1a69, type: 3}
   snowFlake: {fileID: 1611115648557117814}
-  isSlowed: 0
+  foot: {fileID: 0}
+  isFrozen: 0
 --- !u!95 &3865477131689979011
 Animator:
   serializedVersion: 3

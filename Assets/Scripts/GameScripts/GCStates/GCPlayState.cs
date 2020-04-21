@@ -35,8 +35,9 @@ public class GCPlayState : State<GameController>
     }
     
     public override void UpdateState(GameController controller)
-    { 
-        if (Input.GetKeyDown(KeyCode.P))
+    {
+        controller.UpdateGUI();
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             controller.stateMachine.ChangeState(GCPauseState.Instance);
         }

@@ -88,9 +88,9 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if(waterAmount + 5 >= 100)
+                if(waterAmount + 5 >= waterMaxAmount)
                 {
-                    waterAmount = 100;
+                    waterAmount = waterMaxAmount;
                 }
                 else
                 {
@@ -127,8 +127,7 @@ public class PlayerController : MonoBehaviour
             cutters.gameObject.SetActive(false);
         }
 
-        // MOVE THIS
-        waterAmountFillBar.fillAmount = waterAmount / 100f;
+        waterAmountFillBar.fillAmount = waterAmount / waterMaxAmount;
     }
 
     public void SetPlayerVelocity(float _atSpeed, bool allowMovement)
@@ -197,7 +196,7 @@ public class PlayerController : MonoBehaviour
 
             if (Time.time > rateOfSpray + lastSpray)
             {
-                waterAmount -= waterRegenAmount;
+                waterAmount -= (waterRegenAmount + tankUpgradeLevel);
                 lastSpray = Time.time;
                 if (hit)
                 {
@@ -235,7 +234,7 @@ public class PlayerController : MonoBehaviour
         if(target.tag == "Plant")
         {
             PlantController plant = target.GetComponent<PlantController>();
-            plant.Regen(waterRegenAmount);
+            plant.Regen(waterRegenAmount + tankUpgradeLevel);
         }
 
         if(target.tag == "Baddie")
@@ -323,6 +322,7 @@ public class PlayerController : MonoBehaviour
             {
                 waterMaxAmount += 50f;
             }
+
             waterAmount = waterMaxAmount;
             return true;
         }

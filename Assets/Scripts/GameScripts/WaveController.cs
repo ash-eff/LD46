@@ -54,8 +54,12 @@ public class WaveController : MonoBehaviour
             yield return new WaitForSeconds(spawnTimer);
         }
 
-        if(spawnMiniboss)
-            pool.SpawnFromPool("Miniboss", GetLegalSpawnPoint(), Quaternion.identity);
+        if (spawnMiniboss)
+        {
+            GameObject obj = pool.SpawnFromPool("Miniboss", GetLegalSpawnPoint(), Quaternion.identity);
+            obj.GetComponent<BaddieController>().CheckMiniBossHealth();
+        }
+
         stateMachine.ChangeState(WCWaitState.Instance);
     }
 

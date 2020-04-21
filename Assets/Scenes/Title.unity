@@ -1037,6 +1037,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: TransitionLoader
       objectReference: {fileID: 0}
+    - target: {fileID: 7362596076425872819, guid: cf0dcd2afe6f4b14d910a5de22c34611,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362596076425872819, guid: cf0dcd2afe6f4b14d910a5de22c34611,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7469831989993557625, guid: cf0dcd2afe6f4b14d910a5de22c34611,
         type: 3}
       propertyPath: m_text

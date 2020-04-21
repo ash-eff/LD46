@@ -32,6 +32,7 @@ public class GCWaitState : State<GameController>
 
     public override void UpdateState(GameController controller)
     {
+        controller.UpdateGUI();
     }
 
     public override void FixedUpdateState(GameController controller)

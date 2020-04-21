@@ -22,6 +22,8 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI waterLevelText;
     public TextMeshProUGUI waveTimeText;
     public TextMeshProUGUI waveText;
+    public TextMeshProUGUI waterGUI;
+    public TextMeshProUGUI plantGUI;
     public Button nextDayButton;
 
     [SerializeField]
@@ -78,6 +80,13 @@ public class GameController : MonoBehaviour
 
     private void Update() => stateMachine.Update();
     private void FixedUpdate() => stateMachine.FixedUpdate();
+
+
+    public void UpdateGUI()
+    {
+        waterGUI.text = "WATER LEVEL " + Mathf.RoundToInt(player.waterAmount).ToString() + "/" + Mathf.RoundToInt(player.waterMaxAmount).ToString();
+        plantGUI.text = "PLANT LIFE " + Mathf.RoundToInt(plant.life).ToString() + "/" + Mathf.RoundToInt(plant.maxLife).ToString();
+    }
 
     public void TurnUpMusic(bool b)
     {
@@ -164,7 +173,7 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(1.5f);
         stateMachine.ChangeState(GCWaitState.Instance);
         fanfare.SetActive(false);
-        waveText.text = "Wave " + (waveController.waveNumber + 1).ToString();
+        waveText.text = "Day " + (waveController.waveNumber + 1).ToString();
         waveText.gameObject.SetActive(true);
         yield return new WaitForSeconds(1f);
         oneshotAudio.PlayOneShot(timePing1);
