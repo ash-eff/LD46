@@ -23,8 +23,10 @@ public class GCGameOverState : State<GameController>
 
     public override void EnterState(GameController controller)
     {
+        controller.TurnUpMusic(false);
         Cursor.visible = true;
-        Time.timeScale = 0;
+        controller.plantUI.GetComponent<CanvasGroup>().alpha = 0;
+        controller.waterUI.GetComponent<CanvasGroup>().alpha = 0;
         controller.gameOverMenu.SetActive(true);
         controller.player.stateMachine.ChangeState(PlayerWaitState.Instance);
     }
@@ -37,6 +39,7 @@ public class GCGameOverState : State<GameController>
 
     public override void UpdateState(GameController controller)
     {
+        Debug.Log(("game over"));
     }
 
     public override void FixedUpdateState(GameController controller)

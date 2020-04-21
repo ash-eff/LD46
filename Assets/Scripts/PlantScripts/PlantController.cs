@@ -14,6 +14,7 @@ public class PlantController : MonoBehaviour
     public GameObject indicator;
     public TextMeshProUGUI plantDistText;
     PlayerController player;
+    public Fence[] fences;
 
     public int upgradeLevel = 0;
     public int upgradeCost;
@@ -22,6 +23,8 @@ public class PlantController : MonoBehaviour
 
     private GameController gc;
     private Camera cam;
+
+    public bool fenceBroken;
 
     private void Awake()
     {
@@ -33,6 +36,10 @@ public class PlantController : MonoBehaviour
     private void Update()
     {
         CheckScreenPos();
+        fenceBroken = life < (maxLife / 2) ? true : false;
+        fences[0].IsFenceBroken(fenceBroken);
+        fences[1].IsFenceBroken(fenceBroken);
+        fences[2].IsFenceBroken(fenceBroken);
         if (gc.stateMachine.currentState == GCPlayState.Instance && !isRegening)
         {
             Decay();
@@ -109,8 +116,8 @@ public class PlantController : MonoBehaviour
         Vector2 centerPos = cam.transform.position;
         Vector2 directionToMe = MyUtils.Direction2D(centerPos, transform.position);
         plantDistText.text = directionToMe.magnitude.ToString("00") + "m";
-        float clampDirX = Mathf.Clamp(directionToMe.x, -24.75f, 24.75f);
-        float clampDirY = Mathf.Clamp(directionToMe.y, -14f, 14f);
+        float clampDirX = Mathf.Clamp(directionToMe.x, -23.75f, 23.75f);
+        float clampDirY = Mathf.Clamp(directionToMe.y, -13f, 13f);
         indicator.transform.position = new Vector2(cam.transform.position.x, cam.transform.position.y) + new Vector2(clampDirX, clampDirY);
     }
 
@@ -120,7 +127,13 @@ public class PlantController : MonoBehaviour
             return false;
         else
         {
+            if(upgradeLevel > 0)
+            {
+                fences[upgradeLevel - 1].gameObject.SetActive(false);
+            }
+            fences[upgradeLevel].gameObject.SetActive(true);
             upgradeLevel++;
+            
             player.moneyCollected -= upgradeCost;
             upgradeCost += (upgradeCost * upgradeLevel);
             if (upgradeLevel == 1 || upgradeLevel == 2)

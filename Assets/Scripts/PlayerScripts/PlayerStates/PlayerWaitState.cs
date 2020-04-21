@@ -27,8 +27,10 @@ public class PlayerWaitState : State<PlayerController>
         player.SetCursorActive(false);
         player.SetPlayerIdle();
         player.backScissors.SetActive(true);
-        player.hose.gameObject.SetActive(true);
         player.cutters.gameObject.SetActive(false);
+        player.hose.gameObject.SetActive(true);
+        player.hoseSprayer.SetWaterSplashActive(false);
+        player.hoseSprayer.ResetHosePos();
     }
 
     public override void ExitState(PlayerController player)
@@ -37,7 +39,7 @@ public class PlayerWaitState : State<PlayerController>
 
     public override void UpdateState(PlayerController player)
     {
-        
+        player.UpdateMoney();
     }
 
     public override void FixedUpdateState(PlayerController player)

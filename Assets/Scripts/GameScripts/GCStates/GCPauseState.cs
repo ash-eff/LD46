@@ -23,7 +23,10 @@ public class GCPauseState : State<GameController>
 
     public override void EnterState(GameController controller)
     {
+        controller.TurnUpMusic(false);
         Cursor.visible = true;
+        controller.plantUI.GetComponent<CanvasGroup>().alpha = 0;
+        controller.waterUI.GetComponent<CanvasGroup>().alpha = 0;
         Time.timeScale = 0;
         controller.pauseMenu.SetActive(true);
         controller.player.stateMachine.ChangeState(PlayerWaitState.Instance);
@@ -41,7 +44,6 @@ public class GCPauseState : State<GameController>
         {
             controller.stateMachine.ChangeState(GCPlayState.Instance);
         }
-        controller.AdjustVolume();
     }
 
     public override void FixedUpdateState(GameController controller)

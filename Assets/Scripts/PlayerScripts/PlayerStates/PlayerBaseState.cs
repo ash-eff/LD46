@@ -30,6 +30,7 @@ public class PlayerBaseState : State<PlayerController>
 
     public override void UpdateState(PlayerController player)
     {
+        player.UpdateMoney();
         player.PlayerInput();
         player.CursorPosition();
         player.RotateWeapons();

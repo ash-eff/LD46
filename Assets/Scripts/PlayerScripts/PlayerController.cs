@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public Hose hoseSprayer;
     public ParticleSystem confettiOne;
     public ParticleSystem confettiTwo;
+    public GameObject foot;
 
     public int moneyCollected;
 
@@ -51,9 +53,14 @@ public class PlayerController : MonoBehaviour
     private GameController gc;
     private Camera cam;
     private Animator anim;
+    private AudioSource audioSource;
+    public AudioClip coinPickup;
+    public TextMeshProUGUI moneyText;
+    public ObjectPooler pool;
 
     private void Awake()
     {
+        pool = FindObjectOfType<ObjectPooler>();
         hoseSprayer = hose.GetComponent<Hose>();
         backScissors.SetActive(true);
         hose.gameObject.SetActive(true);
@@ -67,6 +74,7 @@ public class PlayerController : MonoBehaviour
         weapon = cutters.GetComponent<Weapon>();
         gc = FindObjectOfType<GameController>();
         cam = Camera.main;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update() => stateMachine.Update();
@@ -136,12 +144,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void PlaceFootprint()
+    {
+        pool.SpawnFromPool("Foot", foot.transform.position, Quaternion.identity);
+    }
+
     public void ClampPlayerToMap()
     {
         Vector2 clampedPos = transform.position;
         clampedPos.x = Mathf.Clamp(transform.position.x, -gc.HalfMapWidth(), gc.HalfMapWidth());
         clampedPos.y = Mathf.Clamp(transform.position.y, -gc.HalfMapHeight(), gc.HalfMapHeight());
         transform.position = clampedPos;
+    }
+
+    public void UpdateMoney()
+    {
+        moneyText.text = moneyCollected.ToString();
     }
 
     public void CheckAnimation()
@@ -163,7 +181,7 @@ public class PlayerController : MonoBehaviour
 
     private void SprayHose()
     {
-        if (waterAmount > 0)
+        if (waterAmount > 0 && stateMachine.currentState == PlayerBaseState.Instance)
         {
             hoseSprayer.SetWaterSplashActive(true);
             RaycastHit2D hit = Physics2D.Raycast(transform.position, MyUtils.Direction2D(transform.position, cursorSprite.transform.position), MyUtils.DistanceBetweenObjects(transform.position, cursorSprite.transform.position), waterHitLayers);
@@ -223,11 +241,17 @@ public class PlayerController : MonoBehaviour
         if(target.tag == "Baddie")
         {
             BaddieController baddie = target.GetComponent<BaddieController>();
-            baddie.GetPushedBack();
             if (freezingWater)
             {
-                // slow baddie
-                Debug.Log("Slow Baddie");
+                if (!baddie.isFrozen)
+                {
+                    baddie.Freeze();
+                }
+
+            }
+            else
+            {
+                baddie.GetPushedBack();
             }
         }
     }
@@ -312,7 +336,7 @@ public class PlayerController : MonoBehaviour
 
     public void CollectMoney(int val)
     {
-        // play sound
+        audioSource.PlayOneShot(coinPickup);
         moneyCollected += val;
     }
 }

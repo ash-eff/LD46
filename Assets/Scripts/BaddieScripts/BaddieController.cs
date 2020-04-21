@@ -38,9 +38,18 @@ public class BaddieController : MonoBehaviour
     private BaddieWalkState walkState = new BaddieWalkState();
     private BaddieAttackState attackState = new BaddieAttackState();
     private BaddiePushbackState pushbackState = new BaddiePushbackState();
+    private BaddieFrozenState frozenState = new BaddieFrozenState();
+    private BaddieStopState gameOverState = new BaddieStopState();
     private Camera cam;
     private GameController gc;
     public Animator anim;
+    private AudioSource audioSource;
+    public AudioClip[] dmgSounds;
+    public GameObject snowFlake;
+    private WaveController wc;
+    public GameObject foot;
+
+    public bool isFrozen;
 
     public float Speed { get { return speed; } }
     public float RateOfAttack { get { return rateOfAttack; } }
@@ -50,6 +59,7 @@ public class BaddieController : MonoBehaviour
 
     private void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
         anim.SetBool("Running", true);
         gc = FindObjectOfType<GameController>();
         baddie = this;
@@ -62,10 +72,18 @@ public class BaddieController : MonoBehaviour
         speed = forwardSpeed;
         cam = Camera.main;
         pool = FindObjectOfType<ObjectPooler>();
+        wc = FindObjectOfType<WaveController>();
     }
 
     private void Update() => stateMachine.Update();
     private void FixedUpdate() => stateMachine.FixedUpdate();
+
+
+
+    public void CheckHealth()
+    {
+        health += Mathf.Ceil(wc.waveNumber / 5) * 5;
+    }
 
     public void GetBaddieDirection()
     {
@@ -93,8 +111,8 @@ public class BaddieController : MonoBehaviour
         Vector2 centerPos = cam.transform.position;
         Vector2 directionToMe = MyUtils.Direction2D(centerPos, transform.position);
         baddDistText.text = directionToMe.magnitude.ToString("00") + "m";
-        float clampDirX = Mathf.Clamp(directionToMe.x, -24.75f, 24.75f);
-        float clampDirY = Mathf.Clamp(directionToMe.y, -14f, 14f);
+        float clampDirX = Mathf.Clamp(directionToMe.x, -23.75f, 23.75f);
+        float clampDirY = Mathf.Clamp(directionToMe.y, -13f, 13f);
         indicator.transform.position = new Vector2(cam.transform.position.x, cam.transform.position.y) + new Vector2(clampDirX, clampDirY);
     }
 
@@ -108,17 +126,29 @@ public class BaddieController : MonoBehaviour
         }
     }
 
+    public void Freeze()
+    {
+        isFrozen = true;
+        StartCoroutine(IFreeze());
+    }
+
+    IEnumerator IFreeze()
+    {
+        stateMachine.ChangeState(frozenState);
+        snowFlake.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        stateMachine.ChangeState(walkState);
+        isFrozen = false;
+        snowFlake.SetActive(false);
+    }
+
     public void TakeDamage(float amount)
     {
+        audioSource.PlayOneShot(dmgSounds[Random.Range(0, dmgSounds.Length)]);
         GameObject obj = pool.SpawnFromPool("FloatingText", transform.position, Quaternion.identity);
         obj.GetComponent<FloatingText>().SetDisplay("- " + amount.ToString());
         health -= amount;
         CheckLife();
-        if (!isFlashing)
-        {
-            isFlashing = true;
-            StartCoroutine(FlashWhite());
-        }
     }
 
     private IEnumerator PushBackTimer()
@@ -153,16 +183,34 @@ public class BaddieController : MonoBehaviour
         {
             Die();
         }
+        else
+        {
+            if (!isFlashing)
+            {
+                isFlashing = true;
+                StartCoroutine(FlashWhite());
+            }
+        }
     }
 
     private void Die()
     {
         float changeToDropCoin = Random.value;
         if (changeToDropCoin <= coinDropChance)
+        {
             pool.SpawnFromPool("Coin", transform.position, Quaternion.identity);
+        }
+
         gc.NumberOfEnemiesAlive--;
         gc.UpdateKillCount();
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+    }
+
+    public void IsGameOver()
+    {
+        bool gameover = gc.stateMachine.currentState == GCGameOverState.Instance ? true : false;
+        if (gameover)
+            stateMachine.ChangeState(gameOverState);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

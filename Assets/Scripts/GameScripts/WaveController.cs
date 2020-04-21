@@ -48,7 +48,8 @@ public class WaveController : MonoBehaviour
         while (numberOfBaddies > 0)
         {
             Vector2 legalPos = GetLegalSpawnPoint();
-            pool.SpawnFromPool(enemies[Random.Range(0, enemies.Length)], legalPos, Quaternion.identity);
+            GameObject obj = pool.SpawnFromPool(enemies[Random.Range(0, enemies.Length)], legalPos, Quaternion.identity);
+            obj.GetComponent<BaddieController>().CheckHealth();
             numberOfBaddies--;
             yield return new WaitForSeconds(spawnTimer);
         }

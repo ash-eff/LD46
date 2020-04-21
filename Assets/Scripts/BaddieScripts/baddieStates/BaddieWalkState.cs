@@ -16,6 +16,7 @@ public class BaddieWalkState : State<BaddieController>
 
     public override void UpdateState(BaddieController baddie)
     {
+        baddie.IsGameOver();
         baddie.CheckScreenPos();
         baddie.GetBaddieDirection();
         Walk(baddie);

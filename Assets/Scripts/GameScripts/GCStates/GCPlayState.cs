@@ -23,7 +23,10 @@ public class GCPlayState : State<GameController>
     
     public override void EnterState(GameController controller)
     {
+        controller.TurnUpMusic(true);
         Cursor.visible = false;
+        controller.plantUI.GetComponent<CanvasGroup>().alpha = 1;
+        controller.waterUI.GetComponent<CanvasGroup>().alpha = 1;
         controller.player.stateMachine.ChangeState(PlayerBaseState.Instance);
     }
     

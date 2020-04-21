@@ -23,7 +23,10 @@ public class GCFanFareState : State<GameController>
 
     public override void EnterState(GameController controller)
     {
+        controller.TurnUpMusic(false);
         Cursor.visible = true;
+        controller.plantUI.GetComponent<CanvasGroup>().alpha = 0;
+        controller.waterUI.GetComponent<CanvasGroup>().alpha = 0;
         controller.player.stateMachine.ChangeState(PlayerWaitState.Instance);
     }
 

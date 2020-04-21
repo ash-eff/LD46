@@ -15,6 +15,7 @@ public class BaddiePushbackState : State<BaddieController>
 
     public override void UpdateState(BaddieController baddie)
     {
+        baddie.IsGameOver();
         baddie.CheckScreenPos();
         Walk(baddie);
     }

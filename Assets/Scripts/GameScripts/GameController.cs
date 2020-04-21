@@ -39,15 +39,16 @@ public class GameController : MonoBehaviour
     private Light2D sunLight;
     [SerializeField]
     private AudioClip statPunch, timePing1, timePing2;
-    private AudioSource audioSource;
+    public AudioSource oneshotAudio;
+    public AudioSource musicAudio;
     private WaveController waveController;
     public PlayerController player;
     private PlantController plant;
 
     public GameObject pauseMenu;
     public GameObject gameOverMenu;
-    public Slider sfxVolume;
-    public Slider musicVolume;
+    public GameObject waterUI;
+    public GameObject plantUI;
 
     [Range(0,1)]
     public float gameSFXVolume;
@@ -67,7 +68,7 @@ public class GameController : MonoBehaviour
         waveController = FindObjectOfType<WaveController>();
         controller = this;
         stateMachine = new StateMachine<GameController>(controller);
-        audioSource = GetComponent<AudioSource>();
+        oneshotAudio = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -78,10 +79,12 @@ public class GameController : MonoBehaviour
     private void Update() => stateMachine.Update();
     private void FixedUpdate() => stateMachine.FixedUpdate();
 
-    public void AdjustVolume()
+    public void TurnUpMusic(bool b)
     {
-        gameSFXVolume = sfxVolume.value;
-        gameMusicVolume = musicVolume.value;
+        if (b)
+            musicAudio.volume = .75f;
+        else
+            musicAudio.volume = .3f;
     }
 
     public void UpdateKillCount()
@@ -104,11 +107,24 @@ public class GameController : MonoBehaviour
             if(numberOfEnemiesAlive <= 0 && stateMachine.currentState != GCWaitState.Instance)
             {
                 stateMachine.ChangeState(GCWaitState.Instance);
+                waveText.gameObject.SetActive(true);
+                waveText.text = "Ending day in 3...";
+                yield return new WaitForSeconds(1f);
+                waveText.text = "Ending day in 2...";
+                yield return new WaitForSeconds(1f);
+                waveText.text = "Ending day in 1...";
+                yield return new WaitForSeconds(1f);
+                waveText.gameObject.SetActive(false);
+                controller.player.stateMachine.ChangeState(PlayerWaitState.Instance);
                 waveTimeToComplete = currentLerpTime;
                 startPos = theSun.transform.rotation;
                 targetPos = Quaternion.Euler(0, 0, -180);
                 currentLerpTime = 0;
                 lerpTime = 1f;
+            }
+            if(stateMachine.currentState == GCGameOverState.Instance)
+            {
+                break;
             }
             currentLerpTime += Time.deltaTime;
             float perc = currentLerpTime / lerpTime;
@@ -118,9 +134,13 @@ public class GameController : MonoBehaviour
             yield return null;
         }
 
-        stateMachine.ChangeState(GCFanFareState.Instance);
-        IGetDayTotals();
-        Debug.Log("Day complete in: " + currentLerpTime + " seconds");
+        if (stateMachine.currentState != GCGameOverState.Instance)
+        {
+            stateMachine.ChangeState(GCFanFareState.Instance);
+            IGetDayTotals();
+            Debug.Log("Day complete in: " + currentLerpTime + " seconds");
+        }
+
     }
 
     void IGetDayTotals()
@@ -147,16 +167,16 @@ public class GameController : MonoBehaviour
         waveText.text = "Wave " + (waveController.waveNumber + 1).ToString();
         waveText.gameObject.SetActive(true);
         yield return new WaitForSeconds(1f);
-        audioSource.PlayOneShot(timePing1);
+        oneshotAudio.PlayOneShot(timePing1);
         waveText.text = "3";
         yield return new WaitForSeconds(1f);
-        audioSource.PlayOneShot(timePing1);
+        oneshotAudio.PlayOneShot(timePing1);
         waveText.text = "2";
         yield return new WaitForSeconds(1f);
-        audioSource.PlayOneShot(timePing1);
+        oneshotAudio.PlayOneShot(timePing1);
         waveText.text = "1";
         yield return new WaitForSeconds(1f);
-        audioSource.PlayOneShot(timePing2);
+        oneshotAudio.PlayOneShot(timePing2);
         waveText.text = "GO";
         yield return new WaitForSeconds(1f);
         waveText.gameObject.SetActive(false);

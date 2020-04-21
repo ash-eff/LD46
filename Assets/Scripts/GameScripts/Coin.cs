@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    public int minVal;
+    public int maxVal;
     private int coinVal;
     ObjectPooler pool;
     PlayerController player;
@@ -12,7 +14,7 @@ public class Coin : MonoBehaviour
     {
         player = FindObjectOfType<PlayerController>();
         pool = FindObjectOfType<ObjectPooler>();
-        coinVal = Random.Range(2, 5);
+        coinVal = Random.Range(minVal, maxVal);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

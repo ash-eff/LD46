@@ -16,6 +16,7 @@ public class BaddieAttackState : State<BaddieController>
 
     public override void UpdateState(BaddieController baddie)
     {
+        baddie.IsGameOver();
         baddie.CheckScreenPos();
         Attack(baddie);
     }
