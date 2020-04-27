@@ -38,7 +38,7 @@ public class BaddieController : MonoBehaviour
     private BaddieWalkState walkState = new BaddieWalkState();
     private BaddieAttackState attackState = new BaddieAttackState();
     private BaddiePushbackState pushbackState = new BaddiePushbackState();
-    private BaddieFrozenState frozenState = new BaddieFrozenState();
+    public BaddieFrozenState frozenState = new BaddieFrozenState();
     private BaddieStopState gameOverState = new BaddieStopState();
     private Camera cam;
     private CameraController cc;
@@ -81,19 +81,28 @@ public class BaddieController : MonoBehaviour
     private void Update() => stateMachine.Update();
     private void FixedUpdate() => stateMachine.FixedUpdate();
 
+    private void LateUpdate()
+    {
+        if(stateMachine.currentState == pushbackState)
+        {
+            stateMachine.ChangeState(walkState);
+            speed = forwardSpeed;
+        }
+        target = plant.transform.position;
+    }
 
 
     public void CheckHealth()
     {
-        if(health < 250)
+        if(health < 350)
         {
-            health += 10;
+            health += 5;
         }
     }
 
     public void CheckMiniBossHealth()
     {
-        if (health < 400)
+        if (health < 500)
         {
             health += 100;
         }
@@ -132,12 +141,19 @@ public class BaddieController : MonoBehaviour
 
     public void GetPushedBack()
     {
-        pushResetTimer = player.rateOfSpray + .1f;
-        if (!beingPushed)
+        if(stateMachine.currentState != attackState)
         {
-            beingPushed = true;
-            StartCoroutine(PushBackTimer());
+            stateMachine.ChangeState(pushbackState);
+            target = player.transform.position;
+            speed = -(forwardSpeed + 1);
         }
+
+        //pushResetTimer = player.rateOfSpray + .1f;
+        //if (!beingPushed)
+        //{
+        //    beingPushed = true;
+        //    StartCoroutine(PushBackTimer());
+        //}
     }
 
     public void Freeze()

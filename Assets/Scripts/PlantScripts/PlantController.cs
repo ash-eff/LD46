@@ -8,13 +8,19 @@ public class PlantController : MonoBehaviour
 {
     public float life;
     public float maxLife;
-    public int decayAmount = 2;
+    public float rateOfDecay;
+    public float lastDecay;
+    public float decayAmount = 1f;
+    //private int maxLifeDecayPerSEcond = 25;
     public bool isRegening = false;
     public Image lifeAmountFillBar;
     public GameObject indicator;
     public TextMeshProUGUI plantDistText;
     PlayerController player;
+    ObjectPooler pool;
     public Fence[] fences;
+    public WaveController wc;
+    public GameObject pointer;
 
     public int upgradeLevel = 0;
     public int upgradeCost;
@@ -28,6 +34,9 @@ public class PlantController : MonoBehaviour
 
     private void Awake()
     {
+        //wc = GetComponent<WaveController>();
+        pool = FindObjectOfType<ObjectPooler>();
+
         player = FindObjectOfType<PlayerController>();
         gc = FindObjectOfType<GameController>();
         cam = Camera.main;
@@ -62,20 +71,40 @@ public class PlantController : MonoBehaviour
     public void TakeDamage(float amount)
     {
         life -= amount;
+        GameObject obj = pool.SpawnFromPool("FloatingText", transform.position, Quaternion.identity);
+        obj.GetComponent<FloatingText>().SetDisplay("-" + amount);
     }
 
     public void Regen(float amount)
     {
         timer = 2f;
         life += amount;
+        GameObject obj = pool.SpawnFromPool("FloatingText", transform.position, Quaternion.identity);
+        obj.GetComponent<FloatingText>().SetDisplay("+" + amount);
         CheckLife();
     }
+
+    //public void AdjustDecayAmount()
+    //{
+    //    if (decayAmountPerSecond < 8)
+    //    {
+    //        Debug.Log("Plant Check: " + wc.waveNumber);
+    //        if (wc.waveNumber % 5 == 0)
+    //            decayAmountPerSecond *= 2;
+    //    }
+    //
+    //    Debug.Log("DEcay Per Sec: " + decayAmountPerSecond);
+    //}
 
     private void Decay()
     {
         if (life > 0)
         {
-            life -= decayAmount * Time.deltaTime;
+            if (Time.time > rateOfDecay + lastDecay)
+            {
+                TakeDamage(decayAmount);
+                lastDecay = Time.time;
+            }
         }
         else
         {

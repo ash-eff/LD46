@@ -66,8 +66,7 @@ MonoBehaviour:
   m_text: 99 m
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 714f06e48115ff94590be132b32b15d5, type: 2}
-  m_sharedMaterial: {fileID: 1635138546088286333, guid: 714f06e48115ff94590be132b32b15d5,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 98f40f3bef8c6fc41b8d6db4f7ef579e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -228,7 +227,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.14828205, y: -0.5472311}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -239,7 +238,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 1.9744244, y: 3.0944622}
   m_EdgeRadius: 0
 --- !u!114 &2970089987706584897
 MonoBehaviour:
@@ -254,9 +253,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rateOfAttack: 1
-  forwardSpeed: 1.5
+  forwardSpeed: 3
   pushResetTimer: 0
-  damageAmount: 2
+  damageAmount: 5
   isFlashing: 0
   health: 90
   indicator: {fileID: 5444436832106766500}
@@ -479,7 +478,7 @@ MonoBehaviour:
   - {x: -0.5, y: 1, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 128066
+  m_InstanceId: 104636
 --- !u!95 &4591053510479216039
 Animator:
   serializedVersion: 3

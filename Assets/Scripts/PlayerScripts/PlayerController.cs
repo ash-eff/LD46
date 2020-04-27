@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 movement;
     private Rigidbody2D rb2d;
     private Weapon weapon;
-    private GameController gc;
+    public GameController gc;
     private Camera cam;
     private Animator anim;
     private AudioSource audioSource;
@@ -113,19 +113,19 @@ public class PlayerController : MonoBehaviour
             hoseSprayer.ResetHosePos();
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
             SwingWeapon();
             backScissors.SetActive(false);
             hose.gameObject.SetActive(false);
             cutters.gameObject.SetActive(true);
         }
-        else
-        {
-            backScissors.SetActive(true);
-            hose.gameObject.SetActive(true);
-            cutters.gameObject.SetActive(false);
-        }
+        //else
+        //{
+        //    backScissors.SetActive(true);
+        //    hose.gameObject.SetActive(true);
+        //    cutters.gameObject.SetActive(false);
+        //}
 
         waterAmountFillBar.fillAmount = waterAmount / waterMaxAmount;
     }
@@ -188,20 +188,11 @@ public class PlayerController : MonoBehaviour
             if (hit)
             {
                 hoseSprayer.SetHoseEndPos(hit.point);
+                HitTargetWithWater(hit.collider);
             }
             else
             {
                 hoseSprayer.SetHoseEndPos(cursorSprite.transform.position);
-            }
-
-            if (Time.time > rateOfSpray + lastSpray)
-            {
-                waterAmount -= (waterRegenAmount + tankUpgradeLevel);
-                lastSpray = Time.time;
-                if (hit)
-                {
-                    HitTargetWithWater(hit.collider);
-                }
             }
         }
         else
@@ -234,23 +225,35 @@ public class PlayerController : MonoBehaviour
         if(target.tag == "Plant")
         {
             PlantController plant = target.GetComponent<PlantController>();
-            plant.Regen(waterRegenAmount + tankUpgradeLevel);
+
+            if (Time.time > rateOfSpray + lastSpray)
+            {
+                waterAmount -= waterRegenAmount;
+                lastSpray = Time.time;
+                plant.Regen(waterRegenAmount);
+            }
         }
 
         if(target.tag == "Baddie")
         {
             BaddieController baddie = target.GetComponent<BaddieController>();
+            if (Time.time > rateOfSpray + lastSpray)
+            {
+                waterAmount -= waterRegenAmount;
+                lastSpray = Time.time;
+            }
+
             if (freezingWater)
             {
                 if (!baddie.isFrozen)
                 {
                     baddie.Freeze();
                 }
-
             }
             else
             {
                 baddie.GetPushedBack();
+
             }
         }
     }
@@ -312,6 +315,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             tankUpgradeLevel++;
+            waterRegenAmount = tankUpgradeLevel * (2 + tankUpgradeLevel);
             moneyCollected -= tankUpgradeCost;
             tankUpgradeCost += (tankUpgradeCost * tankUpgradeLevel);
             if (tankUpgradeLevel == 1 || tankUpgradeLevel == 2)

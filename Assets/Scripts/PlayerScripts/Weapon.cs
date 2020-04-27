@@ -9,6 +9,8 @@ public class Weapon : MonoBehaviour
     public LayerMask enemyLayer;
     public Collider2D[] enemies;
     private ObjectPooler pool;
+    public GameObject hose;
+    public GameObject backScissors;
     private string[] bloodList = { "Blood1", "Blood2", "Blood3", "Blood4" };
 
     private void Awake()
@@ -17,8 +19,17 @@ public class Weapon : MonoBehaviour
         pool = FindObjectOfType<ObjectPooler>();
     }
 
+    public void FinishAttack()
+    {
+        hose.SetActive(true);
+        backScissors.SetActive(true);
+        gameObject.SetActive(false);
+    }
+
     public void AttackEnemies()
     {
+        hose.SetActive(false);
+        backScissors.SetActive(false);
         enemies = Physics2D.OverlapCircleAll(castPoint.transform.position, 2f, enemyLayer);
         if(enemies != null)
         {

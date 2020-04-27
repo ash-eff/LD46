@@ -429,7 +429,7 @@ MonoBehaviour:
   - {x: -0.5, y: 1, z: 0}
   m_ShapePathHash: -414103659
   m_Mesh: {fileID: 0}
-  m_InstanceId: 15990
+  m_InstanceId: 25746
 --- !u!1 &8602619476631546690
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,8 +596,7 @@ MonoBehaviour:
   m_text: 99m
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 714f06e48115ff94590be132b32b15d5, type: 2}
-  m_sharedMaterial: {fileID: 1635138546088286333, guid: 714f06e48115ff94590be132b32b15d5,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 98f40f3bef8c6fc41b8d6db4f7ef579e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -108,7 +108,7 @@ MonoBehaviour:
   - {x: -0.5, y: 1, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 29046
+  m_InstanceId: 104916
 --- !u!1 &1222239353570169526
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,7 +181,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.11477327, y: -0.13526869}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -192,7 +192,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 2.8527675, y: 3.8445692}
   m_EdgeRadius: 0
 --- !u!114 &1222239353570169525
 MonoBehaviour:
@@ -207,9 +207,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rateOfAttack: 1
-  forwardSpeed: 1
+  forwardSpeed: 2
   pushResetTimer: 0
-  damageAmount: 5
+  damageAmount: 12
   isFlashing: 0
   health: 100
   indicator: {fileID: 8236841134882196816}
@@ -489,8 +489,7 @@ MonoBehaviour:
   m_text: 99 m
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 714f06e48115ff94590be132b32b15d5, type: 2}
-  m_sharedMaterial: {fileID: 1635138546088286333, guid: 714f06e48115ff94590be132b32b15d5,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 98f40f3bef8c6fc41b8d6db4f7ef579e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

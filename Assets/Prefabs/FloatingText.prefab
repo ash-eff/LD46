@@ -67,8 +67,7 @@ MonoBehaviour:
   m_text: + 100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 714f06e48115ff94590be132b32b15d5, type: 2}
-  m_sharedMaterial: {fileID: 1635138546088286333, guid: 714f06e48115ff94590be132b32b15d5,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 98f40f3bef8c6fc41b8d6db4f7ef579e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -200,7 +199,7 @@ GameObject:
   - component: {fileID: 8276395743066897903}
   - component: {fileID: 8494508427816261648}
   m_Layer: 0
-  m_Name: TMP SubMeshUI [8-BIT WONDER SDF Material + LiberationSans SDF Atlas]
+  m_Name: TMP SubMeshUI [8-BIT WONDER SDF OUTLINE Material + LiberationSans SDF Atlas]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -256,7 +255,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.25
+  m_padding: 5.75
   m_canvasRenderer: {fileID: 8276395743066897903}
   m_TextComponent: {fileID: 4641435098888371726}
   m_materialReferenceIndex: 1

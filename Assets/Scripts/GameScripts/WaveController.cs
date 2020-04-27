@@ -7,19 +7,24 @@ public class WaveController : MonoBehaviour
     public StateMachine<WaveController> stateMachine;
     public static WaveController waveController;
 
-    public int waveNumber = 0;
+    private int waveNumber = 0;
 
     private ObjectPooler pool;
     private GameController gc;
+    private PlantController plant;
 
     private void Awake()
     {
+        plant = FindObjectOfType<PlantController>();
         waveController = this;
         stateMachine = new StateMachine<WaveController>(waveController);
         stateMachine.ChangeState(WCWaitState.Instance);
         pool = FindObjectOfType<ObjectPooler>();
         gc = FindObjectOfType<GameController>();
+        waveNumber = 0;
     }
+
+    public int WaveNumber { get { return waveNumber; } }
 
     private void Update() => stateMachine.Update();
     private void FixedUpdate() => stateMachine.FixedUpdate();
@@ -31,8 +36,10 @@ public class WaveController : MonoBehaviour
 
     IEnumerator IStartSpawning()
     {
+        Debug.Log("StartSpawning");
         string[] enemies = { "Baddie", "Baddie2", "Baddie3", "Baddie4" };
         waveNumber++;
+        //plant.AdjustDecayAmount();
         int numberOfBaddies = 0;
         bool spawnMiniboss = false;
 

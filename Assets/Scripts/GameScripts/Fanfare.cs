@@ -6,22 +6,22 @@ using TMPro;
 
 public class Fanfare : MonoBehaviour
 {
-    public TextMeshProUGUI plantInfo;
+    //public TextMeshProUGUI plantInfo;
     public Button plantButton;
     public Image plantImage;
     public Sprite[] plantSprites;
     public TextMeshProUGUI plantPrice;
-    public TextMeshProUGUI weaponInfo;
+    //public TextMeshProUGUI weaponInfo;
     public Button weaponButton;
     public Image weaponImage;
     public Sprite[] weaponSprites;
     public TextMeshProUGUI weaponPrice;
-    public TextMeshProUGUI tankInfo;
+    //public TextMeshProUGUI tankInfo;
     public Button tankButton;
     public Image tankImage;
     public Sprite[] tankSprites;
     public TextMeshProUGUI tankPrice;
-    public TextMeshProUGUI waterInfo;
+    //public TextMeshProUGUI waterInfo;
     public Button waterButton;
     public Image waterImage;
     public Sprite[] waterSprites;
@@ -30,6 +30,7 @@ public class Fanfare : MonoBehaviour
     PlantController plant;
     AudioSource source;
     public int amountToSpend;
+    public TextMeshProUGUI infoText;
 
     private void Awake()
     {
@@ -41,6 +42,7 @@ public class Fanfare : MonoBehaviour
     private void OnEnable()
     {
         CheckBankAccount();
+        BankInfo();
     }
 
     void CheckBankAccount()
@@ -66,7 +68,7 @@ public class Fanfare : MonoBehaviour
         else
             tankButton.interactable = false;
 
-        if (amountToSpend >= player.waterUpgradeCost)
+        if (amountToSpend >= player.waterUpgradeCost && !player.freezingWater)
             waterButton.interactable = true;
         else
             waterButton.interactable = false;
@@ -82,19 +84,10 @@ public class Fanfare : MonoBehaviour
     {
         if (plant.UpgradePlantLife())
         {
-            if(plant.upgradeLevel < 3)
-            {
-                plantInfo.text = "Fence\n lvl " + (plant.upgradeLevel + 1).ToString();
-            }
-            else
-            {
-                plantInfo.text = "Fence\n MAX";
-            }
-
+            CheckBankAccount();
             plantImage.sprite = plantSprites[plant.upgradeLevel];
         }
 
-        CheckBankAccount();
         if (plant.upgradeLevel >= 3)
         {
             plantButton.interactable = false;
@@ -105,15 +98,6 @@ public class Fanfare : MonoBehaviour
     {
         if (player.UpgradeWeapon())
         {
-            if (player.weaponUpgradeLevel < 3)
-            {
-                weaponInfo.text = "Sharpen\n lvl " + (player.weaponUpgradeLevel + 1).ToString();
-            }
-            else
-            {
-                weaponInfo.text = "Sharpen\n MAX";
-            }
-
             CheckBankAccount();
             weaponImage.sprite = weaponSprites[player.weaponUpgradeLevel];
         }
@@ -128,15 +112,6 @@ public class Fanfare : MonoBehaviour
     {
         if (player.UpgradeWaterTank())
         {
-            if (player.tankUpgradeLevel < 3)
-            {
-                tankInfo.text = "H20 Tank\n lvl " + (player.tankUpgradeLevel + 1).ToString();
-            }
-            else
-            {
-                tankInfo.text = "H20 Tank\n MAX";
-            }
-
             CheckBankAccount();
             tankImage.sprite = tankSprites[player.tankUpgradeLevel];
         }
@@ -151,8 +126,32 @@ public class Fanfare : MonoBehaviour
     {
         player.UpgradeWaterToFreeze();
         waterImage.sprite = waterSprites[1];
-        waterInfo.text = "Freeze\n aquired";
         waterButton.interactable = false;
         CheckBankAccount();
+    }
+
+    public void BankInfo()
+    {
+        infoText.text = "You have " + amountToSpend.ToString() + " to spend in the shop.";
+    }
+
+    public void FenceInfo()
+    {
+        infoText.text = "Build a fence around your plant friend. Gives the plant extra sustainability. Increases plant life to full on each upgrade.";
+    }
+
+    public void FreezingInfo()
+    {
+        infoText.text = "instead of pushing your enemies back, freeze them in place for a few seconds.";
+    }
+
+    public void WeaponInfo()
+    {
+        infoText.text = "Sharpen those shears so they do more damage!";
+    }
+
+    public void H20Info()
+    {
+        infoText.text = "Increases the amount of damage your water hose can heal. Increases water amount to full on each upgrade.";
     }
 }

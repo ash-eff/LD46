@@ -6,8 +6,8 @@ using TMPro;
 
 public class HydrantController : MonoBehaviour
 {
-    public float waterAmount = 100f;
-    public float maxWaterAmount = 100f;
+    public float waterAmount = 50f;
+    public float maxWaterAmount = 50f;
     public float refillAmount = 2f;
     public Image waterPressureFill;
     public GameObject pumpText;
